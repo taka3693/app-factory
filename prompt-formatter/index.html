@@ -357,7 +357,7 @@
             <div class="control-group">
                 <label for="model-select">AIモデルを選択</label>
                 <select id="model-select">
-                    <option value="chatgpt">ChatGPT (GPT-4/GPT-3.5)</option>
+                    <option value="openai">OpenAI (GPT-4/GPT-3.5)</option>
                     <option value="claude">Claude (Anthropic)</option>
                     <option value="gemini">Gemini (Google)</option>
                 </select>
@@ -496,9 +496,9 @@
 
             // モデル別の整形ルール
             switch (model) {
-                case 'chatgpt':
-                    // ChatGPT: セクションを明確に、箇条書きを整理
-                    formatted = formatForChatGPT(formatted);
+                case 'openai':
+                    // OpenAI: セクションを明確に、箇条書きを整理
+                    formatted = formatForOpenAI(formatted);
                     break;
                 case 'claude':
                     // Claude: 自然な会話形式、XMLタグでセクション分け
@@ -514,8 +514,8 @@
             updateStats('output');
         }
 
-        // ChatGPT用整形
-        function formatForChatGPT(text) {
+        // OpenAI用整形
+        function formatForOpenAI(text) {
             // 余分な空白を整理
             let formatted = text.trim().replace(/\n{3,}/g, '\n\n');
 
