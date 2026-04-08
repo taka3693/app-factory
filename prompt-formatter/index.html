@@ -406,15 +406,28 @@
             btn.textContent = newTheme === 'light' ? '☀️' : '🌙';
 
             // Save preference
-            localStorage.setItem('theme', newTheme);
+            try {
+                localStorage.setItem('theme', newTheme);
+            } catch (e) {
+                // localStorage not available (e.g., private browsing)
+                console.warn('localStorage not available:', e);
+            }
         }
 
         // Load saved theme
         function loadTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
+            let savedTheme = 'dark';
+            try {
+                savedTheme = localStorage.getItem('theme') || 'dark';
+            } catch (e) {
+                // localStorage not available
+                console.warn('localStorage not available:', e);
+            }
             document.body.setAttribute('data-theme', savedTheme);
             const btn = document.querySelector('.theme-toggle');
-            btn.textContent = savedTheme === 'light' ? '☀️' : '🌙';
+            if (btn) {
+                btn.textContent = savedTheme === 'light' ? '☀️' : '🌙';
+            }
         }
 
         // トークン概算
@@ -563,9 +576,18 @@
 
         // 初期化
         document.addEventListener('DOMContentLoaded', () => {
-            loadTheme();
-            updateStats('input');
-            updateStats('output');
+            try {
+                loadTheme();
+                updateStats('input');
+                updateStats('output');
+            } catch (e) {
+                console.error('Initialization error:', e);
+                // Fallback: set default values
+                const inputStats = document.getElementById('input-stats');
+                const outputStats = document.getElementById('output-stats');
+                if (inputStats) inputStats.textContent = '0文字 | ~0トークン';
+                if (outputStats) outputStats.textContent = '0文字 | ~0トークン';
+            }
         });
     </script>
 </body>
