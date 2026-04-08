@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIプロンプト整形ツール</title>
+
+    <!-- OGP Meta Tags -->
+    <meta property="og:title" content="AIプロンプト整形ツール">
+    <meta property="og:description" content="プロンプトを各AIモデル用に最適化">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://taka3693.github.io/app-factory/prompt-formatter/">
+    <meta property="og:image" content="https://taka3693.github.io/app-factory/prompt-formatter/ogp.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AIプロンプト整形ツール">
+    <meta name="twitter:description" content="プロンプトを各AIモデル用に最適化">
+    <meta name="twitter:image" content="https://taka3693.github.io/app-factory/prompt-formatter/ogp.svg">
+
     <style>
         * {
             margin: 0;
@@ -23,12 +35,25 @@
             --success: #10b981;
         }
 
+        /* Light mode variables */
+        [data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent: #e94560;
+            --accent-hover: #ff6b6b;
+            --border: #d0d0d0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
@@ -42,6 +67,7 @@
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
             border-bottom: 2px solid var(--border);
+            position: relative;
         }
 
         h1 {
@@ -51,11 +77,32 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 700;
         }
 
         .subtitle {
             color: var(--text-secondary);
             font-size: 1rem;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            border-color: var(--accent);
         }
 
         .controls {
@@ -241,6 +288,17 @@
             border-top: 1px solid var(--border);
         }
 
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
         .highlight {
             background: rgba(233, 69, 96, 0.2);
             padding: 0.2rem 0.4rem;
@@ -251,7 +309,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>🤖 AIプロンプト整形ツール</h1>
+            <button class="theme-toggle" onclick="toggleTheme()" title="ダークモード切り替え">🌙</button>
+            <h1>✨ AIプロンプト整形ツール</h1>
             <p class="subtitle">プロンプトを各AIモデル用に最適化・整形</p>
         </header>
 
@@ -315,11 +374,33 @@
         </div>
 
         <footer>
-            <p>🚀 AIプロンプト整形ツール | Made with ❤️</p>
+            <p>Made by BOSS | <a href="https://github.com/taka3693/app-factory" target="_blank">GitHub</a></p>
         </footer>
     </div>
 
     <script>
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = newTheme === 'light' ? '☀️' : '🌙';
+
+            // Save preference
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = savedTheme === 'light' ? '☀️' : '🌙';
+        }
+
         // トークン概算
         function estimateTokens(text) {
             if (!text) return 0;
@@ -466,6 +547,7 @@
 
         // 初期化
         document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
             updateStats('input');
             updateStats('output');
         });
